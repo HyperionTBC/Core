@@ -125,7 +125,9 @@ class PlayerSocial
         void SetFriendNote(ObjectGuid friend_guid, std::string note);
         // Packet send's
         void SendFriendList();
+#if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
         void SendIgnoreList();
+#endif
         // Misc
         bool HasFriend(ObjectGuid friend_guid);
         bool HasIgnore(ObjectGuid ignore_guid);

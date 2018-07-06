@@ -631,17 +631,29 @@ void Object::BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask *
                         if (creature->HasLootRecipient())
                         {
                             if (creature->IsTappedBy(target))
+                            #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+                              dynamicFlags |= (UNIT_DYNFLAG_TAPPED | UNIT_DYNFLAG_ROOTED);
+                            #else
                                 dynamicFlags |= (UNIT_DYNFLAG_TAPPED | UNIT_DYNFLAG_TAPPED_BY_PLAYER);
+                            #endif
                             else
                             {
                                 dynamicFlags |= UNIT_DYNFLAG_TAPPED;
+                            #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+                                dynamicFlags &= ~UNIT_DYNFLAG_ROOTED;
+                            #else
                                 dynamicFlags &= ~UNIT_DYNFLAG_TAPPED_BY_PLAYER;
+                            #endif
                             }
                         }
                         else
                         {
                             dynamicFlags &= ~UNIT_DYNFLAG_TAPPED;
+                        #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+                            dynamicFlags &= ~UNIT_DYNFLAG_ROOTED;
+                        #else
                             dynamicFlags &= ~UNIT_DYNFLAG_TAPPED_BY_PLAYER;
+                        #endif
                         }
 
                         if (!target->isAllowedToLoot(creature))

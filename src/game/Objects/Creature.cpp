@@ -1172,6 +1172,14 @@ bool Creature::IsTrainerOf(Player* pPlayer, bool msg) const
                         case RACE_UNDEAD:
                             pPlayer->PlayerTalkClass->SendGossipMenu(624, GetObjectGuid());
                             break;
+                        #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+                         case RACE_BLOODELF:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(5862, GetObjectGuid());
+                            break;
+                        case RACE_DRAENEI:
+                            pPlayer->PlayerTalkClass->SendGossipMenu(5864, GetObjectGuid());
+                            break;
+                        #endif
                     }
                 }
                 return false;

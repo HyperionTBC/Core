@@ -3637,7 +3637,10 @@ static RaceMaskName const raceMaskNames[] =
     { "tauren", (1 << (RACE_TAUREN - 1))  },
     { "gnome", (1 << (RACE_GNOME - 1))   },
     { "troll", (1 << (RACE_TROLL - 1))   },
-
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    { "bloodelf", (1 << (RACE_BLOODELF - 1)) },
+    { "draenei", (1 << (RACE_DRAENEI - 1)) },
+#endif // SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
     // masks
     { "alliance", RACEMASK_ALLIANCE },
     { "horde",    RACEMASK_HORDE },

@@ -166,8 +166,14 @@ inline float finiteAlways(float f) { return finite(f) ? f : 0.0f; }
 // Game client builds
 #define CLIENT_BUILD_1_11_2 5464
 #define CLIENT_BUILD_1_12_1 5875
+#define CLIENT_BUILD_2_4_3 8606
+
 // Change this to define which version players can use
+//#if sWorld.GetWowPatch() < WOW_PATCH_112
 #define SUPPORTED_CLIENT_BUILD CLIENT_BUILD_1_12_1
+//#else
+//#define SUPPORTED_CLIENT_BUILD CLIENT_BUILD_2_4_3
+//#endif
 
 enum TimeConstants
 {

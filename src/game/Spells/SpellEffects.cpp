@@ -4513,6 +4513,11 @@ void Spell::EffectScriptEffect(SpellEffectIndex eff_idx)
                                 case RACE_GNOME:
                                     spellId = 24106;
                                     break;
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+                                 case RACE_DRAENEI:
+                                 spellId = 24108;
+                                 break;
+#endif
                             }
                             break;
                         case 24195:
@@ -4530,6 +4535,11 @@ void Spell::EffectScriptEffect(SpellEffectIndex eff_idx)
                                 case RACE_TROLL:
                                     spellId = 24101;
                                     break;
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+                                 case RACE_BLOODELF:
+                                 spellId = 24101;
+                                 break;
+#endif
                             }
                             break;
                     }

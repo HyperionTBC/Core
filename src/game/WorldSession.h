@@ -890,8 +890,10 @@ class MANGOS_DLL_SPEC WorldSession
         void HandleRandomRollOpcode(WorldPacket& recv_data);
         void HandleFarSightOpcode(WorldPacket& recv_data);
         void HandleWhoisOpcode(WorldPacket& recv_data);
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        //void HandleSetTitleOpcode(WorldPacket& recv_data);
+#endif
         void HandleResetInstancesOpcode(WorldPacket& recv_data);
-
         void HandleAreaSpiritHealerQueryOpcode(WorldPacket& recv_data);
         void HandleAreaSpiritHealerQueueOpcode(WorldPacket& recv_data);
         void HandleSelfResOpcode(WorldPacket& recv_data);

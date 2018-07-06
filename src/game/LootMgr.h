@@ -57,7 +57,13 @@ enum LootType
 
     LOOT_FISHINGHOLE            = 20,                       // unsupported by client, sending LOOT_FISHING instead
     LOOT_FISHING_FAIL           = 21,                       // unsupported by client, sending LOOT_FISHING instead
-    LOOT_INSIGNIA               = 22                        // unsupported by client, sending LOOT_CORPSE instead
+    LOOT_INSIGNIA               = 22,                        // unsupported by client, sending LOOT_CORPSE instead
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    LOOT_PROSPECTING = 7,
+    LOOT_MILLING = 8,
+    LOOT_MAIL = 23,
+    LOOT_SPELL = 24,
+#endif
 };
 
 /*

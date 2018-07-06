@@ -136,6 +136,7 @@ void PlayerSocial::SendFriendList()
     DEBUG_LOG("WORLD: Sent SMSG_FRIEND_LIST");
 }
 
+#if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
 void PlayerSocial::SendIgnoreList()
 {
     MasterPlayer* plr = GetMasterPlayer();
@@ -154,6 +155,7 @@ void PlayerSocial::SendIgnoreList()
     plr->GetSession()->SendPacket(&data);
     DEBUG_LOG("WORLD: Sent SMSG_IGNORE_LIST");
 }
+#endif
 
 bool PlayerSocial::HasFriend(ObjectGuid friend_guid)
 {
