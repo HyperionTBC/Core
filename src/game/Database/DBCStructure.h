@@ -371,6 +371,34 @@ struct ChrClassesEntry
     //uint32 flags2;                                        // 16       m_flags (0x1 HasRelicSlot)
 };
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+struct ChrRacesEntry
+{
+    uint32      RaceID;                                     // 0        m_ID
+    uint32      Flags;                                      // 1        m_flags
+    uint32      FactionID;                                  // 2        m_factionID
+                                                            // 3        m_ExplorationSoundID
+    uint32      model_m;                                    // 4        m_MaleDisplayId
+    uint32      model_f;                                    // 5        m_FemaleDisplayId
+                                                            // 6        m_ClientPrefix
+                                                            // 7        unused
+    uint32      TeamID;                                     // 8        m_BaseLanguage (7-Alliance 1-Horde)
+                                                            // 9        m_creatureType
+                                                            // 10       m_ResSicknessSpellID
+                                                            // 11       m_SplashSoundID
+                                                            // 12       m_clientFileString
+    uint32      CinematicSequence;                          // 13       m_cinematicSequenceID
+    char*       name[16];                                   // 14-29    m_name_lang used for DBC language detection/selection
+                                                            // 30 string flags
+                                                            // char*       nameFemale[16];                          // 31-46    m_name_female_lang
+                                                            // 47 string flags
+                                                            // char*       nameNeutralGender[16];                   // 48-63    m_name_male_lang
+                                                            // 64 string flags
+                                                            // 65-66    m_facialHairCustomization[2]
+                                                            // 67       m_hairCustomization
+    uint32      expansion;                                  // 68       m_required_expansion
+};
+#else
 struct ChrRacesEntry
 {
     uint32      RaceID;                                     // 0        m_ID
@@ -390,23 +418,12 @@ struct ChrRacesEntry
     uint32      startingTaxiMask;                           // 14
                                                             // 15       m_clientFileString
     uint32      CinematicSequence;                          // 16       m_cinematicSequenceID
-    #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
-    char*       name[16];                                   // 14-29    m_name_lang used for DBC language detection/selection
-                                                            // 30 string flags
-                                                            // char*       nameFemale[16];                          // 31-46    m_name_female_lang
-                                                            // 47 string flags
-                                                            // char*       nameNeutralGender[16];                   // 48-63    m_name_male_lang
-                                                            // 64 string flags
-                                                            // 65-66    m_facialHairCustomization[2]
-                                                            // 67       m_hairCustomization
-    uint32      expansion;                                  // 68       m_required_expansion
-    #else
     char*       name[8];                                    // 17-24    m_name_lang used for DBC language detection/selection
                                                             // 25 string flags
                                                             // 26-27    m_facialHairCustomization[2]
                                                             // 28       m_hairCustomization
-    #endif
 };
+#endif
 
 /*struct CinematicCameraEntry
 {
