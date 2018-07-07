@@ -391,13 +391,21 @@ struct ChrRacesEntry
                                                             // 15       m_clientFileString
     uint32      CinematicSequence;                          // 16       m_cinematicSequenceID
     #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
-    char*       name[16];                                    // 17-24    m_name_lang used for DBC language detection/selection
+    char*       name[16];                                   // 14-29    m_name_lang used for DBC language detection/selection
+                                                            // 30 string flags
+                                                            // char*       nameFemale[16];                          // 31-46    m_name_female_lang
+                                                            // 47 string flags
+                                                            // char*       nameNeutralGender[16];                   // 48-63    m_name_male_lang
+                                                            // 64 string flags
+                                                            // 65-66    m_facialHairCustomization[2]
+                                                            // 67       m_hairCustomization
+    uint32      expansion;                                  // 68       m_required_expansion
     #else
     char*       name[8];                                    // 17-24    m_name_lang used for DBC language detection/selection
-    #endif
                                                             // 25 string flags
                                                             // 26-27    m_facialHairCustomization[2]
                                                             // 28       m_hairCustomization
+    #endif
 };
 
 /*struct CinematicCameraEntry
