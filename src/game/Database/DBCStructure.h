@@ -648,6 +648,14 @@ struct GameObjectDisplayInfoEntry
     uint32      Displayid;                                  // 0        m_ID
     char* filename;                                         // 1        m_modelName
                                                             // 2-11     m_Sound
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    float geoBoxMinX;                                       // 12 m_geoBoxMinX (use first value as interact dist, mostly in hacks way)
+    float geoBoxMinY;                                       // 13 m_geoBoxMinY
+    float geoBoxMinZ;                                       // 14 m_geoBoxMinZ
+    float geoBoxMaxX;                                       // 15 m_geoBoxMaxX
+    float geoBoxMaxY;                                       // 16 m_geoBoxMaxY
+    float geoBoxMaxZ;                                       // 17 m_geoBoxMaxZ
+#endif
 };
 
 // All Gt* DBC store data for 100 levels, some by 100 per class/race
