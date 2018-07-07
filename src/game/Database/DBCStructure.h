@@ -680,7 +680,11 @@ struct ItemRandomPropertiesEntry
     char*     internalName;                                 // 1        m_Name
     uint32    enchant_id[3];                                // 2-4      m_Enchantment
                                                             // 5-6 unused, 0 only values, reserved for additional enchantments
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    char*     nameSuffix[16];
+#else
     char*     nameSuffix[8];                                // 7-14     m_name_lang
+#endif
                                                             // 15 string flags
 };
 
