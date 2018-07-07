@@ -691,7 +691,11 @@ struct ItemRandomPropertiesEntry
 struct ItemSetEntry
 {
     //uint32    id                                          // 0        m_ID
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    char*     name[16];                                      // 1-16      m_name_lang
+#else
     char*     name[8];                                      // 1-8      m_name_lang
+#endif
                                                             // 9 string flags
     //uint32    itemId[17];                                 // 10-26    m_itemID
     uint32    spells[8];                                    // 27-34    m_setSpellID
@@ -724,6 +728,9 @@ struct MailTemplateEntry
     uint32      ID;                                         // 0        m_ID
     //char*       subject[8];                               // 1-8      m_subject_lang
                                                             // 9 string flags
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    char*       content[16];                                // 18-33    m_body_lang
+#endif
 };
 
 struct QuestSortEntry
