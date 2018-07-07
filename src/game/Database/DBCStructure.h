@@ -771,7 +771,11 @@ struct SkillLineEntry
     uint32    id;                                           // 0        m_ID
     int32     categoryId;                                   // 1        m_categoryID
     //uint32    skillCostID;                                // 2        m_skillCostsID
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    char*     name[16];                                      // 3-18     m_displayName_lang
+#else
     char*     name[8];                                      // 3-10     m_displayName_lang
+#endif
                                                             // 11 string flags
     //char*     description[8];                             // 12-19    m_description_lang
                                                             // 20 string flags
