@@ -343,7 +343,11 @@ struct ChatChannelsEntry
     uint32  ChannelID;                                      // 0        m_ID
     uint32  flags;                                          // 1        m_flags
                                                             // 2        m_factionGroup
+    #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    char*   pattern[16];                                    // 3-10     m_name_lang
+    #else
     char*   pattern[8];                                     // 3-10     m_name_lang
+    #endif
                                                             // 11 string flags
     //char*       name[8];                                  // 12-19    m_shortcut_lang
                                                             // 20 string flag

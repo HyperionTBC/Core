@@ -118,9 +118,8 @@ DBCStorage <ItemBagFamilyEntry>           sItemBagFamilyStore(ItemBagFamilyfmt);
 DBCStorage <ItemClassEntry>               sItemClassStore(ItemClassfmt);
 DBCStorage <ItemExtendedCostEntry> sItemExtendedCostStore(ItemExtendedCostEntryfmt);
 DBCStorage <ItemRandomSuffixEntry> sItemRandomSuffixStore(ItemRandomSuffixfmt);
-DBCStorage <MapEntry> sMapStore(MapEntryfmt);
+//DBCStorage <MapEntry> sMapStore(MapEntryfmt);
 DBCStorage <RandomPropertiesPointsEntry> sRandomPropertiesPointsStore(RandomPropertiesPointsfmt);
-DBCStorage <SoundEntriesEntry> sSoundEntriesStore(SoundEntriesfmt);
 DBCStorage <SpellItemEnchantmentConditionEntry> sSpellItemEnchantmentConditionStore(SpellItemEnchantmentConditionfmt);
 ItemSpellCategoryStore sItemSpellCategoryStore;
 DBCStorage <SummonPropertiesEntry> sSummonPropertiesStore(SummonPropertiesfmt);
@@ -141,6 +140,8 @@ DBCStorage <SkillLineEntry> sSkillLineStore(SkillLinefmt);
 DBCStorage <SkillLineAbilityEntry> sSkillLineAbilityStore(SkillLineAbilityfmt);
 DBCStorage <SkillRaceClassInfoEntry> sSkillRaceClassInfoStore(SkillRaceClassInfofmt);
 SkillRaceClassInfoMap SkillRaceClassInfoBySkill;
+
+//DBCStorage <SoundEntriesEntry> sSoundEntriesStore(SoundEntriesfmt);
 
 DBCStorage <SpellItemEnchantmentEntry> sSpellItemEnchantmentStore(SpellItemEnchantmentfmt);
 SpellCategoryStore sSpellCategoryStore;
@@ -293,14 +294,14 @@ void LoadDBCStores(const std::string& dataPath)
     LoadDBC(availableDbcLocales, bar, bad_dbc_files, sItemClassStore, dbcPath, "ItemClass.dbc");
     LoadDBC(availableDbcLocales, bar, bad_dbc_files, sItemExtendedCostStore, dbcPath, "ItemExtendedCost.dbc");
     LoadDBC(availableDbcLocales, bar, bad_dbc_files, sItemRandomSuffixStore, dbcPath, "ItemRandomSuffix.dbc");
-    LoadDBC(availableDbcLocales, bar, bad_dbc_files, sMapStore, dbcPath, "Map.dbc");
+    //LoadDBC(availableDbcLocales, bar, bad_dbc_files, sMapStore, dbcPath, "Map.dbc");
     LoadDBC(availableDbcLocales, bar, bad_dbc_files, sRandomPropertiesPointsStore, dbcPath, "RandPropPoints.dbc");
-    LoadDBC(availableDbcLocales, bar, bad_dbc_files, sSoundEntriesStore, dbcPath, "SoundEntries.dbc");
     LoadDBC(availableDbcLocales, bar, bad_dbc_files, sSpellItemEnchantmentConditionStore, dbcPath, "SpellItemEnchantmentCondition.dbc");
     LoadDBC(availableDbcLocales, bar, bad_dbc_files, sSummonPropertiesStore, dbcPath, "SummonProperties.dbc");
     LoadDBC(availableDbcLocales, bar, bad_dbc_files, sTotemCategoryStore, dbcPath, "TotemCategory.dbc");
 
 #endif
+    //LoadDBC(availableDbcLocales, bar, bad_dbc_files, sSoundEntriesStore, dbcPath, "SoundEntries.dbc");
 
     LoadDBC(availableDbcLocales, bar, bad_dbc_files, sAreaTriggerStore,         dbcPath, "AreaTrigger.dbc");
     LoadDBC(availableDbcLocales, bar, bad_dbc_files, sAuctionHouseStore,        dbcPath, "AuctionHouse.dbc");
@@ -638,7 +639,7 @@ AreaTableEntry const* GetAreaEntryByAreaFlagAndMap(uint32 area_flag, uint32 map_
     if (area_flag)
         return sAreaStore.LookupEntry(area_flag);
 
-    if (MapEntry const* mapEntry = sMapStore.LookupEntry(map_id))
+    if (MapEntry const* mapEntry = sMapStorage.LookupEntry<MapEntry>(map_id))
         return GetAreaEntryByAreaID(mapEntry->linkedZone);
 
     return nullptr;
@@ -670,7 +671,7 @@ ContentLevels GetContentLevelsForMapAndZone(uint32 mapid, uint32 zoneId)
     if (mapid < 2)
         return CONTENT_1_60;
 
-    MapEntry const* mapEntry = sMapStore.LookupEntry(mapid);
+    MapEntry const* mapEntry = sMapStorage.LookupEntry<MapEntry>(mapid);
     if (!mapEntry)
         return CONTENT_1_60;
 
@@ -893,19 +894,20 @@ uint32 GetCreatureModelRace(uint32 model_id)
 // script support functions
 // tbc
 #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
- MANGOS_DLL_SPEC DBCStorage <SoundEntriesEntry>    const* GetSoundEntriesStore()
- {
- return &sSoundEntriesStore;
- }
+/*MANGOS_DLL_SPEC DBCStorage <SoundEntriesEntry>    const* GetSoundEntriesStore()
+{
+    return &sSoundEntriesStore;
+}*/
 
- MANGOS_DLL_SPEC DBCStorage <FactionEntry>    const* GetFactionStore()
- {
-     return &sFactionStore;
- }
- MANGOS_DLL_SPEC DBCStorage <ItemEntry>    const* GetItemDisplayStore()
- {
- return &sItemStore;
- }
+MANGOS_DLL_SPEC DBCStorage <FactionEntry>    const* GetFactionStore()
+{
+    return &sFactionStore;
+}
+
+MANGOS_DLL_SPEC DBCStorage <ItemEntry>    const* GetItemDisplayStore()
+{
+    return &sItemStore;
+}
 #endif
 
 MANGOS_DLL_SPEC DBCStorage <SpellRangeEntry>    const* GetSpellRangeStore()

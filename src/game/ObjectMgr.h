@@ -133,11 +133,29 @@ struct BroadcastText
 
 typedef std::unordered_map<uint32, BroadcastText> BroadcastTextLocaleMap;
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+struct SoundEntriesEntry
+{
+    uint32          Id;                                     // 0        m_ID
+    uint32          Type;                                   // uint32    Type;                                      // 1        m_soundType
+    std::string     Name;                                   // 2        m_name
+                                                            // char*     FileName[10];                              // 3-12     m_File[10]
+                                                            // uint32    Unk13[10];                                 // 13-22    m_Freq[10]
+                                                            // char*     Path;                                      // 23       m_DirectoryBase
+                                                            // 24       m_volumeFloat
+                                                            // 25       m_flags
+                                                            // 26       m_minDistance
+                                                            // 27       m_distanceCutoff
+                                                            // 28       m_EAXDef
+};
+#else
 struct SoundEntriesEntry
 {
     uint32          Id;
     std::string     Name;
 };
+#endif
+
 
 // Number of spells in one template
 #define CREATURE_SPELLS_MAX_SPELLS 8
