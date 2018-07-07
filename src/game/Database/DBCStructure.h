@@ -390,7 +390,11 @@ struct ChrRacesEntry
     uint32      startingTaxiMask;                           // 14
                                                             // 15       m_clientFileString
     uint32      CinematicSequence;                          // 16       m_cinematicSequenceID
+    #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    char*       name[16];                                    // 17-24    m_name_lang used for DBC language detection/selection
+    #else
     char*       name[8];                                    // 17-24    m_name_lang used for DBC language detection/selection
+    #endif
                                                             // 25 string flags
                                                             // 26-27    m_facialHairCustomization[2]
                                                             // 28       m_hairCustomization
