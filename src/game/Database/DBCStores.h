@@ -31,6 +31,16 @@
 bool IsAcceptableClientBuild(uint32 build);
 std::string AcceptableClientBuildsListStr();
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+typedef std::list<uint32> SimpleFactionsList;
+enum ContentLevels
+ {
+    CONTENT_1_60 = 0,
+        CONTENT_61_70
+        };
+ContentLevels GetContentLevelsForMapAndZone(uint32 mapid, uint32 zoneId);
+#endif
+
 char const* GetPetName(uint32 petfamily, uint32 dbclang);
 uint32 GetTalentSpellCost(uint32 spellId);
 uint32 GetTalentSpellCost(TalentSpellPos const* pos);

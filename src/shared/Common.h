@@ -170,7 +170,7 @@ inline float finiteAlways(float f) { return finite(f) ? f : 0.0f; }
 
 // Change this to define which version players can use
 //#if sWorld.GetWowPatch() < WOW_PATCH_112
-#define SUPPORTED_CLIENT_BUILD CLIENT_BUILD_1_12_1
+#define SUPPORTED_CLIENT_BUILD CLIENT_BUILD_2_4_3
 //#else
 //#define SUPPORTED_CLIENT_BUILD CLIENT_BUILD_2_4_3
 //#endif

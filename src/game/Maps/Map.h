@@ -97,6 +97,18 @@ struct MapEntry
     int32 ghostEntranceMap;
     float ghostEntranceX;
     float ghostEntranceY;
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    uint32 resetTimeRaid;                                   // 120
+    uint32 resetTimeHeroic;                                 // 121
+                                                            // 122      all 0
+                                                            // uint32  timeOfDayOverride;                           // 123      m_timeOfDayOverride
+    uint32  addon;                                          // 124      m_expansionID
+
+                                                            // Helpers
+    uint32 Expansion() const { return addon; }
+
+#endif
+
     char*  name;
     uint32 scriptId;
 
@@ -105,8 +117,19 @@ struct MapEntry
     bool Instanceable() const { return mapType == MAP_INSTANCE || mapType == MAP_RAID || mapType == MAP_BATTLEGROUND; }
     bool IsRaid() const { return mapType == MAP_RAID; }
     bool IsBattleGround() const { return mapType == MAP_BATTLEGROUND; }
-    bool IsMountAllowed() const { return !IsDungeon() || id == 309 || id == 209 || id == 509 || id == 269; }
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    bool IsBattleArena() const { return mapType == MAP_ARENA; }
+    bool IsBattleGroundOrArena() const { return mapType == MAP_BATTLEGROUND || mapType == MAP_ARENA; }
+    bool SupportsHeroicMode() const { return resetTimeHeroic && !resetTimeRaid; }
+    bool HasResetTime() const { return resetTimeHeroic || resetTimeRaid; }
+    bool IsContinent() const
+    {
+        return id == 0 || id == 1 || id == 530;
+    }
+#else
     bool IsContinent() const { return id == 0 || id == 1; }
+#endif
+    bool IsMountAllowed() const { return !IsDungeon() || id == 309 || id == 209 || id == 509 || id == 269; }
 };
 
 typedef std::map<uint32, uint32> AreaFlagByMapId;
