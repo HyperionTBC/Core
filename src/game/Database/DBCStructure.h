@@ -514,7 +514,6 @@ struct EmotesTextEntry
                                                             //          m_emoteText
 };
 
-#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
 struct FactionEntry
 {
     uint32      ID;                                         // 0        m_ID
@@ -524,7 +523,11 @@ struct FactionEntry
     int32       BaseRepValue[4];                            // 10-13    m_reputationBase
     uint32      ReputationFlags[4];                         // 14-17    m_reputationFlags
     uint32      team;                                       // 18       m_parentFactionID
+    #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
     char*       name[16];                                   // 19-26    m_name_lang
+    #else
+    char*       name[8];                                   // 19-26    m_name_lang
+    #endif
                                                             // 27 string flags
     //char*     description[8];                             // 28-35    m_description_lang
                                                             // 36 string flags
@@ -548,41 +551,6 @@ struct FactionEntry
         return reputationListID >= 0;
     }
 };
-#else
-struct FactionEntry
-{
-    uint32      ID;                                         // 0        m_ID
-    int32       reputationListID;                           // 1        m_reputationIndex
-    uint32      BaseRepRaceMask[4];                         // 2-5      m_reputationRaceMask
-    uint32      BaseRepClassMask[4];                        // 6-9      m_reputationClassMask
-    int32       BaseRepValue[4];                            // 10-13    m_reputationBase
-    uint32      ReputationFlags[4];                         // 14-17    m_reputationFlags
-    uint32      team;                                       // 18       m_parentFactionID
-    char*       name[8];                                    // 19-26    m_name_lang
-                                                            // 27 string flags
-                                                            //char*     description[8];                             // 28-35    m_description_lang
-                                                            // 36 string flags
-
-                                                            // helpers
-
-    int GetIndexFitTo(uint32 raceMask, uint32 classMask) const
-    {
-        for (int i = 0; i < 4; ++i)
-        {
-            if ((BaseRepRaceMask[i] == 0 || (BaseRepRaceMask[i] & raceMask)) &&
-                (BaseRepClassMask[i] == 0 || (BaseRepClassMask[i] & classMask)))
-                return i;
-        }
-
-        return -1;
-    }
-
-    bool CanHaveReputation() const
-    {
-        return reputationListID >= 0;
-    }
-};
-#endif
 
 struct FactionTemplateEntry
 {
