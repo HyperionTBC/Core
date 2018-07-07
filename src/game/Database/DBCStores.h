@@ -33,11 +33,13 @@ std::string AcceptableClientBuildsListStr();
 
 #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
 typedef std::list<uint32> SimpleFactionsList;
+
 enum ContentLevels
- {
+{
     CONTENT_1_60 = 0,
-        CONTENT_61_70
-        };
+    CONTENT_61_70
+};
+
 ContentLevels GetContentLevelsForMapAndZone(uint32 mapid, uint32 zoneId);
 #endif
 
@@ -73,7 +75,11 @@ SkillRaceClassInfoEntry const* GetSkillRaceClassInfo(uint32 skill, uint8 race, u
 extern DBCStorage <AreaTriggerEntry>             sAreaTriggerStore;
 extern DBCStorage <AuctionHouseEntry>            sAuctionHouseStore;
 extern DBCStorage <BankBagSlotPricesEntry>       sBankBagSlotPricesStore;
-//extern DBCStorage <ChatChannelsEntry>           sChatChannelsStore; -- accessed using function, no usable index
+
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+extern DBCStorage <ChatChannelsEntry>            sChatChannelsStore; // -- accessed using function, no usable index
+#endif
+
 extern DBCStorage <CharStartOutfitEntry>         sCharStartOutfitStore;
 extern DBCStorage <ChrClassesEntry>              sChrClassesStore;
 extern DBCStorage <ChrRacesEntry>                sChrRacesStore;
