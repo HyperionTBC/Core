@@ -500,7 +500,11 @@ struct CreatureFamilyEntry
     uint32    maxScaleLevel;                                // 4 0/60
     uint32    skillLine[2];                                 // 5-6
     uint32    petFoodMask;                                  // 7
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    char*     Name[16];
+#else
     char*     Name[8];
+#endif
 };
 
 #define MAX_CREATURE_SPELL_DATA_SLOT 4
