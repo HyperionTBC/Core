@@ -360,7 +360,11 @@ struct ChrClassesEntry
     //uint32 flags;                                         // 2 unknown
     uint32  powerType;                                      // 3        m_DisplayPower
                                                             // 4        m_petNameToken
+    #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    char const* name[16];                                    // 5-12     m_name_lang
+    #else
     char const* name[8];                                    // 5-12     m_name_lang
+    #endif
                                                             // 13 string flags
                                                             // 14       m_filename
     uint32  spellfamily;                                    // 15       m_spellClassSet
