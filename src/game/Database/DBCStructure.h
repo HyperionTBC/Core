@@ -847,6 +847,14 @@ struct SpellShapeshiftFormEntry
     uint32 flags1;                                          // 11       m_flags
     int32  creatureType;                                    // 12       m_creatureType <=0 humanoid, other normal creature types
     //uint32 unk1;                                          // 13       m_attackIconID
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    uint32 attackSpeed;                                     // 22       m_combatRoundTime
+    uint32 modelID_A;                                       // 23       m_creatureDisplayID[4]
+                                                            // uint32 modelID_H;                                    // 24 horde modelid (but all 0)
+                                                            // uint32 unk3;                                         // 25 unused always 0
+                                                            // uint32 unk4;                                         // 26 unused always 0
+    uint32 spellId[8];                                      // 27-34    m_presetSpellID[8]
+#endif
 };
 
 struct SpellDurationEntry
