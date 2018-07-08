@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
  * Copyright (C) 2009-2011 MaNGOSZero <https://github.com/mangos/zero>
  * Copyright (C) 2011-2016 Nostalrius <https://nostalrius.org>
@@ -1065,28 +1065,38 @@ char* const World::GetPatchName() const
 {
     switch(GetWowPatch())
     {
-        case 0:
-            return "Patch 1.2: Mysteries of Maraudon";
-        case 1:
-            return "Patch 1.3: Ruins of the Dire Maul";
-        case 2:
-            return "Patch 1.4: The Call to War";
-        case 3:
-            return "Patch 1.5: Battlegrounds";
-        case 4:
-            return "Patch 1.6: Assault on Blackwing Lair";
-        case 5:
-            return "Patch 1.7: Rise of the Blood God";
-        case 6:
-            return "Patch 1.8: Dragons of Nightmare";
-        case 7:
-            return "Patch 1.9: The Gates of Ahn'Qiraj";
-        case 8:
-            return "Patch 1.10: Storms of Azeroth";
-        case 9:
-            return "Patch 1.11: Shadow of the Necropolis";
-        case 10:
-            return "Patch 1.12: Drums of War";
+    case WOW_PATCH_102:
+        return "Patch 1.2: Mysteries of Maraudon";
+    case WOW_PATCH_103:
+        return "Patch 1.3: Ruins of the Dire Maul";
+    case WOW_PATCH_104:
+        return "Patch 1.4: The Call to War";
+    case WOW_PATCH_105:
+        return "Patch 1.5: Battlegrounds";
+    case WOW_PATCH_106:
+        return "Patch 1.6: Assault on Blackwing Lair";
+    case WOW_PATCH_107:
+        return "Patch 1.7: Rise of the Blood God";
+    case WOW_PATCH_108:
+        return "Patch 1.8: Dragons of Nightmare";
+    case WOW_PATCH_109:
+        return "Patch 1.9: The Gates of Ahn'Qiraj";
+    case WOW_PATCH_110:
+        return "Patch 1.10: Storms of Azeroth";
+    case WOW_PATCH_111:
+        return "Patch 1.11: Shadow of the Necropolis";
+    case WOW_PATCH_112:
+        return "Patch 1.12: Drums of War";
+    case WOW_PATCH_200:
+        return "Patch 2.0: Before the Storm";
+    case WOW_PATCH_201:
+        return "Patch 2.1: The Black Temple";
+    case WOW_PATCH_202:
+        return "Patch 2.2: Voice Chat";
+    case WOW_PATCH_203:
+        return "Patch 2.3: The Gods of ZulAman";
+    case WOW_PATCH_204:
+        return "Patch 2.4: Fury of the Sunwell ";
     }
 
     return "Invalid Patch!";

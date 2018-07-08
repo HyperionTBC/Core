@@ -277,7 +277,11 @@ class MANGOS_DLL_SPEC WorldSession
 {
     friend class CharacterHandler;
     public:
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        WorldSession(uint32 id, WorldSocket *sock, AccountTypes sec, uint8 expansion, time_t mute_time, LocaleConstant locale);
+#else
         WorldSession(uint32 id, WorldSocket *sock, AccountTypes sec, time_t mute_time, LocaleConstant locale);
+#endif
         ~WorldSession();
 
         bool PlayerLoading() const { return m_playerLoading; }
@@ -306,6 +310,9 @@ class MANGOS_DLL_SPEC WorldSession
         std::string const& GetRemoteAddress() const { return m_Address; }
         std::string const& GetClientHash() const { return _clientHash; }
         void SetPlayer(Player *plr) { _player = plr; }
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        uint8 Expansion() const { return m_expansion; }
+#endif
         void SetMasterPlayer(MasterPlayer *plr) { m_masterPlayer = plr; }
         void LoginPlayer(ObjectGuid playerGuid);
         WorldSocket* GetSocket() { return m_Socket; }
@@ -921,6 +928,9 @@ class MANGOS_DLL_SPEC WorldSession
 
         AccountTypes _security;
         uint32 _accountId;
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        uint8 m_expansion;
+#endif
 
         time_t _logoutTime;
         bool m_inQueue;                                     // session wait in auth.queue

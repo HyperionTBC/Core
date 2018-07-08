@@ -246,6 +246,17 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
         return;
     }
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+   // prevent character creating Expansion race without Expansion account
+    if (raceEntry->expansion > Expansion())
+    {
+        data << (uint8)CHAR_CREATE_EXPANSION;
+        sLog.outError("Expansion %u account:[%d] tried to Create character with expansion %u race (%u)", Expansion(), GetAccountId(), raceEntry->expansion, race_);
+        SendPacket(&data);
+        return;
+    }
+#endif
+
     // prevent character creating with invalid name
     if (!normalizePlayerName(name))
     {
@@ -559,6 +570,12 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder *holder)
         data << uint32(0);
     SendPacket(&data);
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    data.Initialize(SMSG_FEATURE_SYSTEM_STATUS, 2);         // added in 2.2.0
+    data << uint8(2);                                       // Can complain (0 = disabled, 1 = enabled, don't auto ignore, 2 = enabled, auto ignore)
+    data << uint8(0);                                       // Voice chat is enabled
+    SendPacket(&data);
+#endif
     // Send MOTD (1.12.1 not have SMSG_MOTD, so do it in another way)
     {
         uint32 linecount = 0;

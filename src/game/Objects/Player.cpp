@@ -1757,14 +1757,37 @@ bool Player::BuildEnumData(QueryResult * result, WorldPacket * p_data)
         {
             *p_data << uint32(0);
             *p_data << uint8(0);
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+            *p_data << uint32(0);
+#endif
             continue;
         }
-
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        SpellItemEnchantmentEntry const* enchant = nullptr;
+        
+            uint32 enchants = GetUInt32ValueFromArray(data, visualbase + 1);
+        for (uint8 enchantSlot = PERM_ENCHANTMENT_SLOT; enchantSlot <= TEMP_ENCHANTMENT_SLOT; ++enchantSlot)
+             {
+                        // values stored in 2 uint16
+            uint32 enchantId = 0x0000FFFF & (enchants >> enchantSlot * 16);
+            if (!enchantId)
+                 continue;
+            
+                if ((enchant = sSpellItemEnchantmentStore.LookupEntry(enchantId)))
+                 break;
+            }
+#endif
         *p_data << uint32(proto->DisplayInfoID);
         *p_data << uint8(proto->InventoryType);
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        *p_data << uint32(enchant ? enchant->aura_id : 0);
+#endif
     }
     *p_data << uint32(0);                                   // first bag display id
     *p_data << uint8(0);                                    // first bag inventory type
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    *p_data << uint32(0);                                   // enchant?
+#endif
 
     return true;
 }

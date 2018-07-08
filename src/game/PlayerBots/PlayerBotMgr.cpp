@@ -320,7 +320,11 @@ bool PlayerBotMgr::addBot(uint32 playerGUID, bool chatBot)
     }
 
     e->state = PB_STATE_LOADING;
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    WorldSession *session = new WorldSession(accountId, NULL, sAccountMgr.GetSecurity(accountId), 1, 0, LOCALE_enUS);  // tbc expansion flag as default
+#else
     WorldSession *session = new WorldSession(accountId, NULL, sAccountMgr.GetSecurity(accountId), 0, LOCALE_enUS);
+#endif
     session->SetBot(e);
     // "It's not because you are a bot that you are allowed cheat!"
     sAnticheatLib->SessionAdded(session);
