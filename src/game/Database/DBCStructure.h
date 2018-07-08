@@ -862,10 +862,18 @@ struct SpellItemEnchantmentEntry
     uint32      amount[3];                                  // 4-6      m_effectPointsMin[3]
     //uint32      amount2[3]                                // 7-9      m_effectPointsMax[3]
     uint32      spellid[3];                                 // 10-12    m_effectArg[3]
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    char*       description[16];
+#else
     char*       description[8];                             // 13-20    m_name_lang[8]
+#endif
                                                             // 21 string flags
     uint32      aura_id;                                    // 22       m_itemVisual
     uint32      slot;                                       // 23       m_flags
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    uint32      GemID;                                      // 32       m_src_itemID
+    uint32      EnchantmentCondition;                       // 33       m_condition_id
+#endif
 };
 
 struct StableSlotPricesEntry
