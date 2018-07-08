@@ -275,7 +275,11 @@ CleanCharacterDB = 1
 #        1.10  = 8
 #        1.11  = 9
 #        1.12  = 10
-#
+#		 2.0   = 11
+#        2.1   = 12
+#        2.2   = 13
+#        2.3   = 14
+#        2.4   = 15
 #    PvP.AccurateEquipRequirements
 #        Whether to enforce Blizzlike PVP rank requirements to equip PVP gear before patch 1.6.
 #        Default: 1
