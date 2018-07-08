@@ -955,6 +955,10 @@ struct TaxiPathNodeEntry
     float     z;                                            // 6        m_LocZ
     uint32    actionFlag;                                   // 7        m_flags
     uint32    delay;                                        // 8        m_delay
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    uint32    arrivalEventID;                               // 9        m_arrivalEventID
+    uint32    departureEventID;                             // 10       m_departureEventID
+#endif
 };
 
 struct WMOAreaTableEntry
