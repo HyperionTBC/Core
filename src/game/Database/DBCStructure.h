@@ -927,7 +927,11 @@ struct TaxiNodesEntry
     float     x;                                            // 2        m_x
     float     y;                                            // 3        m_y
     float     z;                                            // 4        m_z
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    char*     name[16];                                      // 5-20     m_Name_lang
+#else
     char*     name[8];                                      // 5-12     m_Name_lang
+#endif
                                                             // 13 string flags
     uint32    MountCreatureID[2];                           // 14-15    m_MountCreatureID[2] horde[14]-alliance[15]
 };
