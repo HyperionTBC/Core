@@ -34,12 +34,18 @@ class AuthCrypt
 {
     public:
         AuthCrypt();
+#if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
         ~AuthCrypt();
 
         const static size_t CRYPTED_SEND_LEN = 4;
         const static size_t CRYPTED_RECV_LEN = 6;
+#endif
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        void Init(BigNumber* K);
+#else
         void Init();
+#endif
 
         void SetKey(const std::vector<uint8>& key);
         void SetKey(uint8* key, size_t len);
@@ -63,11 +69,13 @@ class NoCrypt
     public:
         NoCrypt() {}
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        void Init(BigNumber* K);
+#else
         void Init() {}
-
         void SetKey(const std::vector<uint8>& key) {}
         void SetKey(uint8* key, size_t len) {}
-
+#endif
         void DecryptRecv(uint8*, size_t) {}
         void EncryptSend(uint8*, size_t) {}
 };
