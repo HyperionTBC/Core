@@ -190,7 +190,11 @@ struct ActionButton
     }
 };
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+#define  MAX_ACTION_BUTTONS 132   // TBC 132 checked in 2.3.0
+#else
 #define  MAX_ACTION_BUTTONS 120   // TBC 132 checked in 2.3.0
+#endif
 
 struct PlayerCreateInfoItem
 {
@@ -1817,7 +1821,7 @@ class MANGOS_DLL_SPEC Player final: public Unit
         void CastItemCombatSpell(Unit* Target, WeaponAttackType attType);
         void CastItemUseSpell(Item *item,SpellCastTargets const& targets);
 
-        void SendInitWorldStates(uint32 zone);
+        void SendInitWorldStates(uint32 zone, uint32 area);
         void SendUpdateWorldState(uint32 Field, uint32 Value);
         void SendDirectMessage(WorldPacket *data);
 
@@ -2070,6 +2074,9 @@ class MANGOS_DLL_SPEC Player final: public Unit
         bool CanWalk() const { return true; }
         bool CanSwim() const { return true; }
         bool CanFly() const { return IsFlying(); }
+        bool IsFlying() const { return m_movementInfo.HasMovementFlag(MOVEFLAG_FLYING); }
+        bool IsFreeFlying() const { return HasAuraType(SPELL_AURA_MOD_FLIGHT_SPEED_MOUNTED) || HasAuraType(SPELL_AURA_FLY); }
+
 
         void SetFly(bool enable) override;
         void SetFeatherFall(bool enable) override;

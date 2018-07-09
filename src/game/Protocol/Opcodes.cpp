@@ -155,8 +155,10 @@ void Opcodes::BuildOpcodeList()
     /*0x063*/  StoreOpcode(SMSG_WHO,                          "SMSG_WHO",                         STATUS_NEVER,     PACKET_PROCESS_MAX_TYPE,      &WorldSession::Handle_ServerSide);
     /*0x064*/  StoreOpcode(CMSG_WHOIS,                        "CMSG_WHOIS",                       STATUS_LOGGEDIN,  PACKET_PROCESS_WORLD,         &WorldSession::HandleWhoisOpcode);
     /*0x065*/  StoreOpcode(SMSG_WHOIS,                        "SMSG_WHOIS",                       STATUS_NEVER,     PACKET_PROCESS_MAX_TYPE,      &WorldSession::Handle_ServerSide);
+#if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
     /*0x066*/  StoreOpcode(CMSG_FRIEND_LIST,                  "CMSG_FRIEND_LIST",                 STATUS_LOGGEDIN,  PACKET_PROCESS_MAP,           &WorldSession::HandleFriendListOpcode);
     /*0x067*/  StoreOpcode(SMSG_FRIEND_LIST,                  "SMSG_FRIEND_LIST",                 STATUS_NEVER,     PACKET_PROCESS_MAX_TYPE,      &WorldSession::Handle_ServerSide);
+#endif
     /*0x068*/  StoreOpcode(SMSG_FRIEND_STATUS,                "SMSG_FRIEND_STATUS",               STATUS_NEVER,     PACKET_PROCESS_MAX_TYPE,      &WorldSession::Handle_ServerSide);
     /*0x069*/  StoreOpcode(CMSG_ADD_FRIEND,                   "CMSG_ADD_FRIEND",                  STATUS_LOGGEDIN,  PACKET_PROCESS_MAP,           &WorldSession::HandleAddFriendOpcode);
     /*0x06A*/  StoreOpcode(CMSG_DEL_FRIEND,                   "CMSG_DEL_FRIEND",                  STATUS_LOGGEDIN,  PACKET_PROCESS_MAP,           &WorldSession::HandleDelFriendOpcode);
@@ -943,7 +945,9 @@ void Opcodes::BuildOpcodeList()
     /*0x290*/  StoreOpcode(CMSG_BUYBACK_ITEM,                 "CMSG_BUYBACK_ITEM",                STATUS_LOGGEDIN,  PACKET_PROCESS_SELF_ITEMS,    &WorldSession::HandleBuybackItem);
     /*0x291*/  StoreOpcode(SMSG_SERVER_MESSAGE,               "SMSG_SERVER_MESSAGE",              STATUS_NEVER,     PACKET_PROCESS_MAX_TYPE,      &WorldSession::Handle_ServerSide);
     /*0x292*/  StoreOpcode(CMSG_MEETINGSTONE_JOIN,            "CMSG_MEETINGSTONE_JOIN",           STATUS_LOGGEDIN,  PACKET_PROCESS_WORLD,         &WorldSession::HandleMeetingStoneJoinOpcode);
+#if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
     /*0x293*/  StoreOpcode(CMSG_MEETINGSTONE_LEAVE,           "CMSG_MEETINGSTONE_LEAVE",          STATUS_LOGGEDIN,  PACKET_PROCESS_WORLD,         &WorldSession::HandleMeetingStoneLeaveOpcode);
+#endif
     /*0x294*/  StoreOpcode(CMSG_MEETINGSTONE_CHEAT,           "CMSG_MEETINGSTONE_CHEAT",          STATUS_NEVER,     PACKET_PROCESS_MAX_TYPE,      &WorldSession::Handle_NULL);
     /*0x295*/  StoreOpcode(SMSG_MEETINGSTONE_SETQUEUE,        "SMSG_MEETINGSTONE_SETQUEUE",       STATUS_NEVER,     PACKET_PROCESS_MAX_TYPE,      &WorldSession::Handle_ServerSide);
     /*0x296*/  StoreOpcode(CMSG_MEETINGSTONE_INFO,            "CMSG_MEETINGSTONE_INFO",           STATUS_LOGGEDIN,  PACKET_PROCESS_WORLD,         &WorldSession::HandleMeetingStoneInfoOpcode);

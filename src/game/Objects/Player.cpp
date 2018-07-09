@@ -1171,6 +1171,17 @@ void Player::SetDrunkValue(uint16 newDrunkenValue, uint32 itemId)
         m_detectInvisibilityMask |= (1 << 6);
     else
         m_detectInvisibilityMask &= ~(1 << 6);
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    if (newDrunkenState == oldDrunkenState)
+        return;
+
+    WorldPacket data(SMSG_CROSSED_INEBRIATION_THRESHOLD, (8 + 4 + 4));
+    data << GetObjectGuid();
+    data << uint32(newDrunkenState);
+    data << uint32(itemId);
+
+    SendMessageToSet(&data, true);
+#endif
 }
 
 // Used to update attacker creatures (including pets' attackers) combat status when a player switches map
@@ -6582,7 +6593,7 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
     if (m_zoneUpdateId != newZone)
     {
         sZoneScriptMgr.HandlePlayerLeaveZone(this, oldZoneId);
-        SendInitWorldStates(newZone);                       // only if really enters to new zone, not just area change, works strange...
+        SendInitWorldStates(newZone, newArea);                       // only if really enters to new zone, not just area change, works strange...
         sZoneScriptMgr.HandlePlayerEnterZone(this, newZone);
 
         if (sWorld.getConfig(CONFIG_BOOL_WEATHER))
@@ -8095,7 +8106,7 @@ static WorldStatePair def_world_states[] =
 
 
 
-void Player::SendInitWorldStates(uint32 zoneid)
+void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
 {
     uint32 mapid = GetMapId();
 
@@ -8103,12 +8114,23 @@ void Player::SendInitWorldStates(uint32 zoneid)
 
     uint32 count = 1; // count of world states in packet, 1 extra for the terminator
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    WorldPacket data(SMSG_INIT_WORLD_STATES, (4 + 4 + 4 + 2 + 8 * 8)); // guess
+#else
     WorldPacket data(SMSG_INIT_WORLD_STATES, (4 + 4 + 2 + 6));
+#endif
     data << uint32(mapid);                              // mapid
     data << uint32(zoneid);                             // zone id
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    data << uint32(areaid);                                 // area id, new 2.1.0
+#endif
     size_t count_pos = data.wpos();
     data << uint16(0);                                  // count of uint32 blocks, placeholder
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    //Need to create Arena season variable
+    FillInitialWorldState(data, count, 0xC77, 1);
+#endif
     // Scourge Invasion - Patch 1.11
     if (sGameEventMgr.IsActiveEvent(GAME_EVENT_SCOURGE_INVASION))
     {
@@ -11891,7 +11913,9 @@ void Player::SendNewItem(Item *item, uint32 count, bool received, bool created, 
     data << uint32(item->GetItemSuffixFactor());            // SuffixFactor
     data << uint32(item->GetItemRandomPropertyId());        // random item property id
     data << uint32(count);                                  // count of items
-    //data << uint32(GetItemCount(item->GetEntry()));       // [-ZERO] count of items in inventory
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    data << uint32(GetItemCount(item->GetEntry()));       // [-ZERO] count of items in inventory
+#endif
 
     if (broadcast && GetGroup())
         GetGroup()->BroadcastPacket(&data, true);
@@ -14173,7 +14197,11 @@ void Player::SendQuestReward(Quest const *pQuest, uint32 XP, Object * questGiver
 {
     uint32 questid = pQuest->GetQuestId();
     DEBUG_LOG("WORLD: Sent SMSG_QUESTGIVER_QUEST_COMPLETE quest = %u", questid);
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    WorldPacket data(SMSG_QUESTGIVER_QUEST_COMPLETE, (4 + 4 + 4 + 4 + 4 + 4 + pQuest->GetRewItemsCount() * 8));
+#else
     WorldPacket data(SMSG_QUESTGIVER_QUEST_COMPLETE, (4 + 4 + 4 + 4 + 4 + pQuest->GetRewItemsCount() * 8));
+#endif
     data << questid;
     data << uint32(0x03);
 
@@ -15819,7 +15847,9 @@ void Player::SendRaidInfo()
             time_t resetTime = sMapPersistentStateMgr.GetScheduler().GetResetTimeFor(state->GetMapId());
             data << uint32(resetTime - time(nullptr));
             data << uint32(state->GetInstanceId());         // instance id
-
+    #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+            data << uint32(counter);
+    #endif
             counter++;
         }
     }
@@ -15836,32 +15866,52 @@ void Player::SendSavedInstances()
     bool hasBeenSaved = false;
     WorldPacket data;
 
-    for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end(); ++itr)
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
     {
-        if (itr->second.perm)                               // only permanent binds are sent
+#endif
+        for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end(); ++itr)
         {
-            hasBeenSaved = true;
-            break;
+            if (itr->second.perm)                               // only permanent binds are sent
+            {
+                hasBeenSaved = true;
+                break;
+            }
         }
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
     }
+#endif
 
     //Send opcode 811. true or false means, whether you have current raid instances
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    data.Initialize(SMSG_UPDATE_INSTANCE_OWNERSHIP);
+#else
     data.Initialize(SMSG_UPDATE_INSTANCE_OWNERSHIP, 4);
+#endif
     data << uint32(hasBeenSaved);
     GetSession()->SendPacket(&data);
 
     if (!hasBeenSaved)
         return;
 
-    for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end(); ++itr)
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
     {
-        if (itr->second.perm)
+#endif
+
+        for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end(); ++itr)
         {
-            data.Initialize(SMSG_UPDATE_LAST_INSTANCE, 4);
-            data << uint32(itr->second.state->GetMapId());
-            GetSession()->SendPacket(&data);
+            if (itr->second.perm)
+            {
+                data.Initialize(SMSG_UPDATE_LAST_INSTANCE, 4);
+                data << uint32(itr->second.state->GetMapId());
+                GetSession()->SendPacket(&data);
+            }
         }
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
     }
+#endif
+
 }
 
 /// convert the player's binds to the group
@@ -15884,23 +15934,30 @@ void Player::ConvertInstancesToGroup(Player *player, Group *group, ObjectGuid pl
 
     if (player)
     {
-        for (BoundInstancesMap::iterator itr = player->m_boundInstances.begin(); itr != player->m_boundInstances.end();)
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
         {
-            has_binds = true;
-
-            if (group)
-                group->BindToInstance(itr->second.state, itr->second.perm, true);
-
-            // permanent binds are not removed
-            if (!itr->second.perm)
+#endif
+            for (BoundInstancesMap::iterator itr = player->m_boundInstances.begin(); itr != player->m_boundInstances.end();)
             {
-                // increments itr in call
-                player->UnbindInstance(itr, true);
-                has_solo = true;
+                has_binds = true;
+
+                if (group)
+                    group->BindToInstance(itr->second.state, itr->second.perm, true);
+
+                // permanent binds are not removed
+                if (!itr->second.perm)
+                {
+                    // increments itr in call
+                    player->UnbindInstance(itr, true);
+                    has_solo = true;
+                }
+                else
+                    ++itr;
             }
-            else
-                ++itr;
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
         }
+#endif
     }
 
     uint32 player_lowguid = player_guid.GetCounter();
@@ -15937,8 +15994,13 @@ bool Player::_LoadHomeBind(QueryResult *result)
         MapEntry const* bindMapEntry = sMapStorage.LookupEntry<MapEntry>(m_homebindMapId);
 
         // accept saved data only for valid position (and non instanceable), and accessable
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
         if (MapManager::IsValidMapCoord(m_homebindMapId, m_homebindX, m_homebindY, m_homebindZ) &&
-                !bindMapEntry->Instanceable())
+            !bindMapEntry->Instanceable() && GetSession()->Expansion() >= bindMapEntry->Expansion())
+#else
+        if (MapManager::IsValidMapCoord(m_homebindMapId, m_homebindX, m_homebindY, m_homebindZ) &&
+            !bindMapEntry->Instanceable())
+#endif
             ok = true;
         else
             CharacterDatabase.PExecute("DELETE FROM character_homebind WHERE guid = '%u'", GetGUIDLow());
@@ -18384,7 +18446,20 @@ void Player::SendInitialPacketsBeforeAddToMap()
     // tutorial stuff
     GetSession()->SendTutorialsData();
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    data.Initialize(SMSG_INSTANCE_DIFFICULTY, 4 + 4);
+    data << uint32(GetMap()->GetDifficulty());
+    data << uint32(0);
+    GetSession()->SendPacket(&data);
+#endif
+
     SendInitialSpells();
+
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    data.Initialize(SMSG_SEND_UNLEARN_SPELLS, 4);
+    data << uint32(0);                                      // count, for(count) uint32;
+    GetSession()->SendPacket(&data);
+#endif
 
     if (MasterPlayer* masterPlayer = GetSession()->GetMasterPlayer())
         masterPlayer->SendInitialActionButtons();
@@ -18399,9 +18474,14 @@ void Player::SendInitialPacketsBeforeAddToMap()
     data << (float)0.01666667f;                             // game speed
     GetSession()->SendPacket(&data);
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    if (IsFreeFlying() || IsTaxiFlying())
+        m_movementInfo.AddMovementFlag(MOVEFLAG_FLYING);
+#else
     // set fly flag if in fly form or taxi flight to prevent visually drop at ground in showup moment
     if (IsTaxiFlying())
         m_movementInfo.AddMovementFlag(MOVEFLAG_FLYING);
+#endif
 
     SetMover(this);
 }
@@ -18423,7 +18503,11 @@ void Player::SendInitialPacketsAfterAddToMap(bool login)
     {
         SPELL_AURA_MOD_FEAR,     SPELL_AURA_TRANSFORM,                 SPELL_AURA_WATER_WALK,
         SPELL_AURA_FEATHER_FALL, SPELL_AURA_HOVER,                     SPELL_AURA_SAFE_FALL,
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        SPELL_AURA_FLY,          SPELL_AURA_MOD_FLIGHT_SPEED_MOUNTED,  SPELL_AURA_NONE
+#else
         SPELL_AURA_NONE
+#endif
     };
     for (AuraType const* itr = &auratypes[0]; itr && itr[0] != SPELL_AURA_NONE; ++itr)
     {

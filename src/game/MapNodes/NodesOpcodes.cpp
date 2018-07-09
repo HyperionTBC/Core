@@ -237,7 +237,9 @@ void NodesOpcodes::BuildOpcodeList()
 
 #define MASTER_OPCODE(opc) mMasterOpcode.insert(opc)
     // Social
+#if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
     MASTER_OPCODE(CMSG_FRIEND_LIST);
+#endif
     MASTER_OPCODE(CMSG_ADD_FRIEND);
     MASTER_OPCODE(CMSG_DEL_FRIEND);
     MASTER_OPCODE(CMSG_ADD_IGNORE);

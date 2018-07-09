@@ -650,15 +650,22 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder *holder)
         sObjectAccessor.AddObject(pCurrChar);
 
     //DEBUG_LOG("Player %s added to Map.",pCurrChar->GetName());
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    pCurrChar->GetSocial()->SendSocialList();
+#else
     pCurrChar->GetSocial()->SendFriendList();
+#endif
 
 #if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
      pCurrChar->GetSocial()->SendIgnoreList(); 
 #endif
 
     pCurrChar->SendInitialPacketsAfterAddToMap();
+#if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
+
     if (alreadyOnline)
         pCurrChar->SendInitWorldStates(pCurrChar->GetCachedZoneId());
+#endif
 
     static SqlStatementID updChars;
     static SqlStatementID updAccount;

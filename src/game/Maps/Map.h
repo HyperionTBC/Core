@@ -389,6 +389,12 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>, public MaNGOS::Obj
         virtual bool CanEnter(Player* /*player*/) { return true; }
         const char* GetMapName() const;
 
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        uint8 GetSpawnMode() const { return (i_spawnMode); }
+        Difficulty GetDifficulty() const { return Difficulty(GetSpawnMode()); }
+        bool IsRegularDifficulty() const { return GetDifficulty() == REGULAR_DIFFICULTY; }
+#endif
+
         const MapEntry* GetMapEntry() const { return i_mapEntry; }
         bool Instanceable() const { return i_mapEntry && i_mapEntry->Instanceable(); }
         bool IsNonRaidDungeon() const { return i_mapEntry && i_mapEntry->IsNonRaidDungeon(); }
@@ -697,6 +703,9 @@ class MANGOS_DLL_SPEC Map : public GridRefManager<NGridType>, public MaNGOS::Obj
 
     protected:
         MapEntry const* i_mapEntry;
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        uint8 i_spawnMode;
+#endif
         uint32 i_id;
         uint32 i_InstanceId;
         uint32 m_unloadTimer;

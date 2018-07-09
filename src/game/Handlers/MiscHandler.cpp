@@ -499,6 +499,7 @@ void WorldSession::HandleStandStateChangeOpcode(WorldPacket & recv_data)
     _player->SetStandState(animstate);
 }
 
+#if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
 void WorldSession::HandleFriendListOpcode(WorldPacket & recv_data)
 {
     ASSERT(GetMasterPlayer());
@@ -506,6 +507,7 @@ void WorldSession::HandleFriendListOpcode(WorldPacket & recv_data)
     GetMasterPlayer()->GetSocial()->SendFriendList();
 }
 
+#endif
 void WorldSession::HandleAddFriendOpcode(WorldPacket & recv_data)
 {
     ASSERT(GetMasterPlayer());

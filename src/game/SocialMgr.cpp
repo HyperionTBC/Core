@@ -105,6 +105,46 @@ void PlayerSocial::RemoveFromSocialList(ObjectGuid friend_guid, bool ignore)
         CharacterDatabase.PExecute("UPDATE character_social SET flags = (flags & ~%u) WHERE guid = '%u' AND friend = '%u'", flag, m_playerLowGuid, friend_guid.GetCounter());
 }
 
+
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+void PlayerSocial::SendSocialList()
+{
+    MasterPlayer* plr = GetMasterPlayer();
+    if (!plr)
+        return;
+
+    uint32 size = m_playerSocialMap.size();
+
+    WorldPacket data(SMSG_CONTACT_LIST, (4 + 4 + size * 25)); // just can guess size
+    data << uint32(7);                                      // unk flag (0x1, 0x2, 0x4), 0x7 if it include ignore list
+    data << uint32(size);                                   // friends count
+
+    for (PlayerSocialMap::iterator itr = m_playerSocialMap.begin(); itr != m_playerSocialMap.end(); ++itr)
+    {
+        FriendInfo& friendInfo = itr->second;
+        sSocialMgr.GetFriendInfo(plr, itr->first, friendInfo);
+
+        data << ObjectGuid(HIGHGUID_PLAYER, itr->first);    // player guid
+        data << uint32(friendInfo.Flags);                  // player flag (0x1-friend?, 0x2-ignored?, 0x4-muted?)
+        data << friendInfo.Note;                           // string note
+        if (friendInfo.Flags & SOCIAL_FLAG_FRIEND)         // if IsFriend()
+        {
+            data << uint8(friendInfo.Status);              // online/offline/etc?
+            if (friendInfo.Status)                         // if online
+            {
+                data << uint32(friendInfo.Area);           // player area
+                data << uint32(friendInfo.Level);          // player level
+                data << uint32(friendInfo.Class);          // player class
+            }
+        }
+    }
+
+    plr->GetSession()->SendPacket(&data);
+    DEBUG_LOG("WORLD: Sent SMSG_CONTACT_LIST");
+}
+#endif
+
+#if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
 void PlayerSocial::SendFriendList()
 {
     MasterPlayer* plr = GetMasterPlayer();
@@ -135,6 +175,7 @@ void PlayerSocial::SendFriendList()
     plr->GetSession()->SendPacket(&data);
     DEBUG_LOG("WORLD: Sent SMSG_FRIEND_LIST");
 }
+#endif
 
 #if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
 void PlayerSocial::SendIgnoreList()

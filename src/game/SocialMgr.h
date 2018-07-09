@@ -55,6 +55,9 @@ struct FriendInfo
     uint32 Area;
     uint32 Level;
     uint32 Class;
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+    std::string Note;
+#endif
 
     FriendInfo()
     {
@@ -124,7 +127,12 @@ class PlayerSocial
         void RemoveFromSocialList(ObjectGuid friend_guid, bool ignore);
         void SetFriendNote(ObjectGuid friend_guid, std::string note);
         // Packet send's
+#if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_12_1
+        void SendSocialList();
+#else
         void SendFriendList();
+#endif
+
 #if SUPPORTED_CLIENT_BUILD <= CLIENT_BUILD_1_12_1
         void SendIgnoreList();
 #endif
